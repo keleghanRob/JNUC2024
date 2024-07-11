@@ -1,0 +1,11 @@
+#!/bin/bash
+
+userName=$(ls -l /dev/console | awk '{print $3}')
+
+output=$(defaults read /Users/$userName/Library/Preferences/com.jamfsoftware.selfservice.mac.plist com.jamfsoftware.selfservice.onboardingcomplete)
+
+if [ $output -eq 1 ]; then
+echo "<result>True</result>"
+else
+echo "<result>False</result>"
+fi
