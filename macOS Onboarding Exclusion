@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#get logged in user
+loggedInUser=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk -F': ' '/[[:space:]]+Name[[:space:]]:/ { if ( $2 != "loginwindow" ) { print $2 }}' )
+echo "loggedInUser... $loggedInUser"
+#get user home directory
+userHome=$(dscl . read "/Users/$loggedInUser" NFSHomeDirectory | awk -F ' ' '{print $2}')
+echo "User home... $userHome"
+#clean up file permissions
+/usr/sbin/chown $loggedInUser:staff "$userHome/Library/Preferences/com.jamfsoftware.selfservice.mac.plist"
+#create file with user permissions
+su $loggedInUser -c "/usr/bin/defaults write ~/Library/Preferences/com.jamfsoftware.selfservice.mac.plist com.jamfsoftware.selfservice.onboardingcomplete -bool TRUE"
+permissions=$(ls -alh "$userHome/Library/Preferences/com.jamfsoftware.selfservice.mac.plist")
+echo "File permissions are now: $permissions"
