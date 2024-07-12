@@ -1,0 +1,6 @@
+#!/bin/bash
+
+defaults delete ~/Library/Preferences/com.jamfsoftware.selfservice.mac.plist
+
+#flush policies so they are re-ran
+jamf flushPolicyhistory
